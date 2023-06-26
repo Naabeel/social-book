@@ -4,6 +4,11 @@ const port = 8000;
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose')
+const session = require('express-session');
+const passport = require('passport');
+const passportLocal =  require('./config/passport-local-startegy');
+const mongoStore =  require('connect-mongo');
+
 
 app.use(express.urlencoded());
 
@@ -20,6 +25,28 @@ app.set('layout extractScripts', true);
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
+
+app.use(session({
+    name:'socialbook',
+    secret: 'nabeel',
+    saveUninitialized : false,
+    resave : false,
+    cookie:{
+        maxAge : (10000 *60*100)
+    },
+    store: new mongoStore({
+        mongoUrl : 'mongodb://127.0.0.1/social-book',
+        autoRemove: 'disabled',
+    }, function(err){
+        console.log(err || 'connect-mongodb setup ok');
+    })
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(passport.setAuthenticatedUser);
 
 
 
