@@ -3,6 +3,8 @@
         <title>
             <%= title %>
         </title>
+        <link href="toastr.css" rel="stylesheet"/>
+        <script src="toastr.js"></script>
         <link rel="stylesheet" href="/css/layout.css">
         <%- style %>
        
@@ -10,10 +12,24 @@
     </head>
     <body>
         <%- include('_header') %>
+        <!-- <% if(flash.success && flash.success.length > 0) { %>
+            <h5>
+                <%= flash.success%>
+            </h5>
+            <% } %> -->
         <%- body %>
 
         <%- include('_footer') %>
 
         <%- script %>
+
+
+
+        <script>
+            <% if(flash.success && flash.success.length > 0){ %>
+                toastr.success(<%= flash.success %>,{timeOut:2000});
+                
+                <%}%>
+        </script>
     </body>
 </html>
