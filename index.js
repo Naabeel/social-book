@@ -7,7 +7,7 @@ const db = require('./config/mongoose')
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal =  require('./config/passport-local-startegy');
-const mongoStore =  require('connect-mongo');
+const mongoStore =  require('connect-mongo')(session);
 const flash = require('connect-flash');
 const customMware = require('./config/middleware');
 
@@ -17,6 +17,7 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 
 app.use(express.static('./assets'));
+app.use('/uploads', express.static(__dirname + '/uploads' ));
 
 
 app.use(expressLayouts);
@@ -37,12 +38,33 @@ app.use(session({
         maxAge : (10000 *60*100)
     },
     store: new mongoStore({
-        mongoUrl : 'mongodb://127.0.0.1/social-book',
+        mongooseConnection : db,
         autoRemove: 'disabled',
     }, function(err){
         console.log(err || 'connect-mongodb setup ok');
     })
 }));
+// app.use(
+//     session({
+//       name: "Codeial",
+//       // TODO - Change the secret before deployment in production mode
+//       secret: "something",
+//       saveUninitialized: false,
+//       resave: false,
+//       cookie: {
+//         maxAge: 1000 * 60 * 100,
+//       },
+//       storetore: new mongoStore(
+//         {
+//           mongooseConnection: db,
+//           autoRemove: "disabled",
+//         },
+//         (error) => {
+//           console.log(error || "connect-mongodb setup ok");
+//         }
+//       ),
+//     })
+//   );
 
 
 app.use(passport.initialize());
