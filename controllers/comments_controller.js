@@ -20,9 +20,9 @@ module.exports.create = async function(req, res){
             post.comments.push(comment);
             post.save();
             
-            comment = await comment.populate('user', 'name email').execPopulate();
+            comment = await comment.populate(['user']);
             // commentsMailer.newComment(comment);
-
+            console.log('coming here');
             let job = queue.create('emails', comment).save(function(err){
                 if (err){
                     console.log('Error in sending to the queue', err);
